@@ -1,6 +1,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useTypingStore } from "../store/useTypingStore";
+import { voiceProfiles } from "../utils/animaleseData";
 import "./SettingsModal.css";
 
 const SettingsModal = () => {
@@ -35,23 +36,65 @@ const SettingsModal = () => {
         </div>
 
         <div className="setting-group">
-          <label>
-            <span>Tone (Pitch)</span>
-            <span className="value-label">{soundConfig.frequency}Hz</span>
-          </label>
-          <input
-            type="range"
-            min="200"
-            max="1200"
-            step="50"
-            value={soundConfig.frequency}
-            onChange={handleFrequencyChange}
-          />
-          <div className="range-labels">
-            <span>Low (Thock)</span>
-            <span>High (Click)</span>
+          <label>Sound Type</label>
+          <div className="toggle-group">
+            <button
+              className={`toggle-btn ${
+                soundConfig.type === "mechanical" ? "active" : ""
+              }`}
+              onClick={() => setSoundConfig({ type: "mechanical" })}
+            >
+              Mechanical
+            </button>
+            <button
+              className={`toggle-btn ${
+                soundConfig.type === "animalese" ? "active" : ""
+              }`}
+              onClick={() => setSoundConfig({ type: "animalese" })}
+            >
+              Animalese
+            </button>
           </div>
         </div>
+
+        {soundConfig.type === "mechanical" ? (
+          <div className="setting-group">
+            <label>
+              <span>Tone (Pitch)</span>
+              <span className="value-label">{soundConfig.frequency}Hz</span>
+            </label>
+            <input
+              type="range"
+              min="200"
+              max="1200"
+              step="50"
+              value={soundConfig.frequency}
+              onChange={handleFrequencyChange}
+            />
+            <div className="range-labels">
+              <span>Low (Thock)</span>
+              <span>High (Click)</span>
+            </div>
+          </div>
+        ) : (
+          <div className="setting-group">
+            <label>Voice Personality</label>
+            <select
+              value={soundConfig.profile || "f1"}
+              onChange={(e) => setSoundConfig({ profile: e.target.value })}
+              className="profile-select"
+            >
+              {Object.entries(voiceProfiles).map(([key, profile]) => (
+                <option key={key} value={key}>
+                  {profile.name}
+                </option>
+              ))}
+            </select>
+            <div className="info-text-small">
+              Voice automatically matches page language (Korean/English).
+            </div>
+          </div>
+        )}
 
         <div className="setting-group">
           <label>

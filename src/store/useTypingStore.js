@@ -30,6 +30,9 @@ export const useTypingStore = create(
       theme: 'system', // 'light' | 'dark' | 'system'
       soundEnabled: true,
       soundConfig: {
+        type: 'animalese', // 'mechanical' | 'animalese'
+        profile: 'f1', // 'f1', 'm1', etc.
+        voiceLanguage: 'korean', // 'korean' | 'english'
         frequency: 600, // Pitch (Hz)
         volume: 0.4,    // Gain (0-1)
       },

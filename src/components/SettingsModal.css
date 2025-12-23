@@ -80,6 +80,32 @@ input[type="range"] {
   margin-top: 0.5rem;
 }
 
+.toggle-group {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-color-secondary, rgba(128,128,128,0.1));
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.toggle-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.toggle-btn.active {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+}
+
 .info-text {
   text-align: center;
   color: var(--subtle-color);
@@ -90,4 +116,34 @@ input[type="range"] {
 @keyframes scaleUp {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+.profile-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--bg-color-secondary, rgba(128,128,128,0.1));
+  border: 1px solid var(--border-color, rgba(128,128,128,0.2));
+  color: var(--text-color);
+  font-size: 0.95rem;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.profile-select:focus {
+  outline: 2px solid var(--primary-color);
+  border-color: transparent;
+}
+
+.profile-select option {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.info-text-small {
+  font-size: 0.8rem;
+  color: var(--subtle-color);
+  margin-top: 8px;
+  line-height: 1.4;
+  text-align: left;
 }

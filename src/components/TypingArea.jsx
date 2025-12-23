@@ -14,8 +14,16 @@ const TypingArea = () => {
     errors,
     soundEnabled,
     soundConfig,
+    language,
   } = useTypingStore();
-  const { playClick, playError } = useSound(soundEnabled, soundConfig);
+
+  // Mix in the current app language to control voice bank
+  const effectiveSoundConfig = {
+    ...soundConfig,
+    voiceLanguage: language === "ko" ? "korean" : "english",
+  };
+
+  const { playClick, playError } = useSound(soundEnabled, effectiveSoundConfig);
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -41,7 +49,12 @@ const TypingArea = () => {
     const newKeystrokes = countKeystrokes(newVal);
 
     if (newKeystrokes > prevKeystrokes) {
-      playClick();
+      // Pass the last char to playClick for accurate mapping
+      try {
+        playClick(newVal.slice(-1));
+      } catch (e) {
+        console.error("Sound error:", e);
+      }
     }
     handleInput(newVal);
   };
