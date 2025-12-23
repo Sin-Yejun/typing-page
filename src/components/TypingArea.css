@@ -1,0 +1,78 @@
+.typing-area-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem 0;
+  outline: none;
+}
+
+.text-display {
+  font-family: 'Roboto Mono', 'Menlo', 'Courier New', monospace;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--subtle-color);
+  word-break: break-all;
+  white-space: pre-wrap;
+  user-select: none;
+}
+
+.char {
+  position: relative;
+  transition: color 0.1s;
+}
+
+.char.correct {
+  color: var(--text-color);
+}
+
+.char.incorrect {
+  color: var(--error-color);
+  text-decoration: underline;
+}
+
+/* Cursor Animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Only show cursor when container is focused */
+.typing-area-container.focused .char.cursor::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0px; 
+  top: 0;
+  width: 2px;
+  background-color: var(--primary-color);
+  animation: blink 1s infinite;
+}
+
+/* Hide fallback/default if needed, though strictly scoping above implies it won't show otherwise. 
+   But we need to ensure the previous rule (unscoped) is removed/replaced.
+*/
+
+.char.cursor.space::before {
+  left: 0; 
+}
+
+/* Hidden Input */
+.hidden-input {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  pointer-events: none; /* Let container handle clicks */
+}
+
+.typing-area-container.focused .text-display {
+  /* Optional: subtle cue */
+  opacity: 1;
+}
+
+.typing-area-container:not(.focused) .text-display {
+  opacity: 0.7;
+}

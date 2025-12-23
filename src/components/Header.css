@@ -1,0 +1,68 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary-color);
+  letter-spacing: -0.03em;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.language-selector {
+  display: flex;
+  background: rgba(128, 128, 128, 0.1);
+  padding: 4px;
+  border-radius: 8px;
+  margin-right: 0.5rem;
+}
+
+.lang-btn {
+  border: none;
+  background: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--subtle-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-btn.active {
+  background: var(--bg-color);
+  color: var(--text-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: var(--text-color);
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.1);
+}

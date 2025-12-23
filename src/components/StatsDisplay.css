@@ -1,0 +1,27 @@
+.stats-display {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--subtle-color);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}

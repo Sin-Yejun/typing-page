@@ -1,0 +1,93 @@
+.settings-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeIn 0.2s ease;
+}
+
+.settings-modal-content {
+  background: var(--bg-color);
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  border: 1px solid rgba(128,128,128,0.1);
+  animation: scaleUp 0.2s ease;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background: rgba(128,128,128,0.1);
+}
+
+.setting-group {
+  margin-bottom: 2rem;
+}
+
+.setting-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+
+.value-label {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--subtle-color);
+  margin-top: 0.5rem;
+}
+
+.info-text {
+  text-align: center;
+  color: var(--subtle-color);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
