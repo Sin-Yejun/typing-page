@@ -2,6 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import { useTypingStore } from "../store/useTypingStore";
 import { voiceProfiles } from "../utils/animaleseData";
+import { customSounds } from "../utils/customSoundData";
 import "./SettingsModal.css";
 
 const SettingsModal = () => {
@@ -10,13 +11,31 @@ const SettingsModal = () => {
 
   if (!isSettingsOpen) return null;
 
-  const handleFrequencyChange = (e) => {
-    setSoundConfig({ frequency: parseInt(e.target.value) });
-  };
-
   const handleVolumeChange = (e) => {
     setSoundConfig({ volume: parseFloat(e.target.value) });
   };
+
+  const handleMainSoundChange = (e) => {
+    const value = e.target.value;
+    if (value === "animalese") {
+      // Keep existing profile if switching back to animalese, or default to f1 if none
+      const currentProfile = voiceProfiles[soundConfig.profile] ? soundConfig.profile : 'f1';
+      setSoundConfig({ type: "animalese", profile: currentProfile });
+    } else {
+      // It's a custom sound
+      const data = customSounds[value];
+      setSoundConfig({ 
+          type: "custom", 
+          profile: value,
+          // Reset overrides when switching to a fresh preset
+          customOffset: data.startTime || 0,
+          customDuration: data.duration || null
+      });
+    }
+  };
+
+  // Determine current selection for the main dropdown
+  const currentSelection = soundConfig.type === "animalese" ? "animalese" : soundConfig.profile;
 
   // Close when clicking outside content
   const handleOverlayClick = (e) => {
@@ -36,48 +55,26 @@ const SettingsModal = () => {
         </div>
 
         <div className="setting-group">
-          <label>Sound Type</label>
-          <div className="toggle-group">
-            <button
-              className={`toggle-btn ${
-                soundConfig.type === "mechanical" ? "active" : ""
-              }`}
-              onClick={() => setSoundConfig({ type: "mechanical" })}
-            >
-              Mechanical
-            </button>
-            <button
-              className={`toggle-btn ${
-                soundConfig.type === "animalese" ? "active" : ""
-              }`}
-              onClick={() => setSoundConfig({ type: "animalese" })}
-            >
-              Animalese
-            </button>
-          </div>
+          <label>Sound Effect</label>
+          <select
+            value={currentSelection}
+            onChange={handleMainSoundChange}
+            className="profile-select"
+          >
+            {/* 1. Custom Sounds */}
+            {Object.entries(customSounds).map(([key, data]) => (
+              <option key={key} value={key}>
+                {data.name}
+              </option>
+            ))}
+            {/* 2. Animalese (Last) */}
+            <option value="animalese">Animalese (Dynamic)</option>
+          </select>
         </div>
 
-        {soundConfig.type === "mechanical" ? (
-          <div className="setting-group">
-            <label>
-              <span>Tone (Pitch)</span>
-              <span className="value-label">{soundConfig.frequency}Hz</span>
-            </label>
-            <input
-              type="range"
-              min="200"
-              max="1200"
-              step="50"
-              value={soundConfig.frequency}
-              onChange={handleFrequencyChange}
-            />
-            <div className="range-labels">
-              <span>Low (Thock)</span>
-              <span>High (Click)</span>
-            </div>
-          </div>
-        ) : (
-          <div className="setting-group">
+        {/* Show Sub-options for Animalese if selected */}
+        {soundConfig.type === "animalese" && (
+          <div className="setting-group" style={{ marginTop: '0.5rem', borderLeft: '3px solid var(--primary)', paddingLeft: '1rem' }}>
             <label>Voice Personality</label>
             <select
               value={soundConfig.profile || "f1"}
@@ -96,6 +93,7 @@ const SettingsModal = () => {
           </div>
         )}
 
+        {/* Global Volume Control */}
         <div className="setting-group">
           <label>
             <span>Volume</span>
@@ -111,10 +109,6 @@ const SettingsModal = () => {
             value={soundConfig.volume}
             onChange={handleVolumeChange}
           />
-        </div>
-
-        <div className="info-text">
-          Adjust the sliders to customize your typing sound.
         </div>
       </div>
     </div>
