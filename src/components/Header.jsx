@@ -35,7 +35,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <h1>TypeZen</h1>
+        <h1>Tadak Typing</h1>
       </div>
 
       <div className="controls">

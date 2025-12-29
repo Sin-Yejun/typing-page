@@ -37,8 +37,7 @@ function App() {
       <SettingsModal />
       <footer className="footer">
         <p>
-          Press <code>Enter</code> to restart (when done) • <code>Esc</code> to
-          reset
+          Press <code>Esc</code> to reset
         </p>
       </footer>
     </div>

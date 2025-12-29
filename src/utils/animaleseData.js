@@ -40,6 +40,35 @@ export const voice_sprite = {
     'deska':  [600 * 2 + 200*36, 600]
 };
 
+export const sfx_sprite = {
+    'backspace'           : [600 * 0,  600],
+    'enter'               : [600 * 1,  600],
+    'tab'                 : [600 * 2,  600],
+    'question'            : [600 * 3,  600],
+    'exclamation'         : [600 * 4,  600],
+    'at'                  : [600 * 5,  600],
+    'pound'               : [600 * 6,  600],
+    'dollar'              : [600 * 7,  600],
+    'caret'               : [600 * 8,  600],
+    'ampersand'           : [600 * 9,  600],
+    'asterisk'            : [600 * 10, 600],
+    'parenthesis_open'    : [600 * 11, 600],
+    'parenthesis_closed'  : [600 * 12, 600],
+    'bracket_open'        : [600 * 13, 600],
+    'bracket_closed'      : [600 * 14, 600],
+    'brace_open'          : [600 * 15, 600],
+    'brace_closed'        : [600 * 16, 600],
+    'tilde'               : [600 * 17, 600],
+    'default'             : [600 * 18, 600],
+    'arrow_left'          : [600 * 19, 600],
+    'arrow_up'            : [600 * 20, 600],
+    'arrow_right'         : [600 * 21, 600],
+    'arrow_down'          : [600 * 22, 600],
+    'slash_forward'       : [600 * 23, 600],
+    'slash_back'          : [600 * 24, 600],
+    'percent'             : [600 * 25, 600]
+};
+
 // Maps Korean and English characters to the sprite key
 export const keyMapping = {
     // English (Identity)
@@ -56,7 +85,24 @@ export const keyMapping = {
     'ㅐ': 'o', 'ㅔ': 'p', 'ㅂ': 'q', 'ㄱ': 'r', 'ㄴ': 's', 'ㅅ': 't', 'ㅕ': 'u',
     'ㅍ': 'v', 'ㅈ': 'w', 'ㅌ': 'x', 'ㅛ': 'y', 'ㅋ': 'z',
     'ㄸ': 'e', 'ㅃ': 'q', 'ㅉ': 'w', 'ㅆ': 't', 'ㄲ': 'r', 
-    'ㅒ': 'o', 'ㅖ': 'p'
+    'ㅒ': 'o', 'ㅖ': 'p',
+
+    // Special Characters & Symbols
+    '!': 'exclamation', '@': 'at', '#': 'pound', '$': 'dollar', '%': 'percent',
+    '^': 'caret', '&': 'ampersand', '*': 'asterisk', 
+    '(': 'parenthesis_open', ')': 'parenthesis_closed',
+    '[': 'bracket_open', ']': 'bracket_closed',
+    '{': 'brace_open', '}': 'brace_closed',
+    '<': 'arrow_left', '>': 'arrow_right', // Maybe? Or default
+    '/': 'slash_forward', '\\': 'slash_back', '?': 'question',
+    '~': 'tilde',
+    '`': 'default', '-': 'default', '_': 'default', '=': 'default', '+': 'default',
+    ';': 'default', ':': 'default', "'": 'default', '"': 'default',
+    ',': 'default', '.': 'default',
+    ' ': 'default',
+    'Enter': 'enter',
+    'Backspace': 'backspace',
+    'Tab': 'tab'
 };
 
 export const voiceProfiles = {

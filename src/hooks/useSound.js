@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import {
   voice_sprite,
+  sfx_sprite,
   keyMapping,
   voiceProfiles,
 } from "../utils/animaleseData";
@@ -11,7 +12,8 @@ export const useSound = (
   config = { type: "mechanical", profile: "f1", frequency: 600, volume: 0.4 }
 ) => {
   const audioContextRef = useRef(null);
-  const buffersRef = useRef({}); // Cache for audio buffers
+  const buffersRef = useRef({}); // Cache for voice buffers
+  const sfxBufferRef = useRef(null); // Cache for SFX buffer
   const [loadedProfiles, setLoadedProfiles] = useState(new Set());
 
   useEffect(() => {
@@ -20,6 +22,20 @@ export const useSound = (
     if (AudioContext && !audioContextRef.current) {
       audioContextRef.current = new AudioContext();
     }
+  }, []);
+
+  // Load SFX (Once)
+  useEffect(() => {
+    if (!audioContextRef.current) return;
+    if (sfxBufferRef.current) return;
+
+    fetch("/sfx.ogg")
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) => audioContextRef.current.decodeAudioData(arrayBuffer))
+      .then((audioBuffer) => {
+        sfxBufferRef.current = audioBuffer;
+      })
+      .catch((e) => console.error("Failed to load sfx.ogg:", e));
   }, []);
 
   // Load the selected profile's audio
@@ -81,42 +97,63 @@ export const useSound = (
     const volume = config.volume !== undefined ? config.volume : 0.4;
 
     if (config.type === "animalese") {
-      if (char === " ") return;
+      if (char === " " && keyMapping[" "] !== "default") return; // Skip space if no mapping or if unwanted. Wait, previous code skipped space.
 
       const profileId = config.profile || "f1";
       const language = config.voiceLanguage || "korean";
       const cacheKey = `animalese/${language}/${profileId}`;
-      const buffer = buffersRef.current[cacheKey];
+      
       const profile = voiceProfiles[profileId];
+      // Note: we don't strictly need profile loaded to play SFX, but we do for voice.
+      
+      const normalizedChar = char.toLowerCase();
+      let spriteKey = keyMapping[normalizedChar] || keyMapping[char] || "o";
 
-      if (buffer && profile) {
-        let startTime = 0;
-        let duration = 0.15;
-
-        // Correctly handle Jamo or English char
-        const normalizedChar = char.toLowerCase();
-        let spriteKey = keyMapping[normalizedChar] || keyMapping[char] || "o";
-
-        if (!keyMapping[normalizedChar] && !keyMapping[char]) {
+      // Fallback for unknown characters
+      if (!keyMapping[normalizedChar] && !keyMapping[char]) {
+          // If it looks like a symbol/number not in map, maybe random letter?
+          // Existing logic:
           const keys = "abcdefghijklmnopqrstuvwxyz";
           const code = char.charCodeAt(0) || 0;
           spriteKey = keys[code % keys.length];
-        }
+      }
 
-        const spriteData = voice_sprite[spriteKey];
-        if (spriteData) {
-          startTime = spriteData[0] / 1000;
-          duration = 0.15;
-        }
+      // Check if it's Voice or SFX
+      let isSfx = false;
+      let spriteData = voice_sprite[spriteKey];
+      
+      if (!spriteData) {
+        spriteData = sfx_sprite[spriteKey];
+        isSfx = true;
+      }
+      
+      // Select buffer
+      const buffer = isSfx ? sfxBufferRef.current : buffersRef.current[cacheKey];
+
+      if (buffer && spriteData) {
+        let startTime = spriteData[0] / 1000;
+        let duration = spriteData[1] / 1000;
 
         const source = ctx.createBufferSource();
         source.buffer = buffer;
 
-        const basePitch = profile.pitch;
-        const variation = (Math.random() * 2 - 1) * profile.variation;
-
-        const totalPitchShift = basePitch + variation;
-        const rate = Math.pow(2, totalPitchShift / 12.0);
+        // Pitch shift logic
+        let rate = 1.0;
+        if (isSfx) {
+             // For SFX, we might want consistent pitch, or very slight variation.
+             // Applying voice profile pitch to SFX usually sounds wrong (e.g. low pitch click).
+             // However, slight variation makes it organic.
+             const variation = (Math.random() * 0.1 - 0.05);
+             rate = 1.0 + variation;
+        } else {
+             // Voice
+             if (profile) {
+                const basePitch = profile.pitch;
+                const variation = (Math.random() * 2 - 1) * profile.variation;
+                const totalPitchShift = basePitch + variation;
+                rate = Math.pow(2, totalPitchShift / 12.0);
+             }
+        }
 
         source.playbackRate.value = Math.max(0.1, rate);
 
