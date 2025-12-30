@@ -29,9 +29,11 @@ export const useSound = (
     if (!audioContextRef.current) return;
     if (sfxBufferRef.current) return;
 
-    fetch("/sfx.ogg")
+    fetch("sfx.ogg")
       .then((response) => response.arrayBuffer())
-      .then((arrayBuffer) => audioContextRef.current.decodeAudioData(arrayBuffer))
+      .then((arrayBuffer) =>
+        audioContextRef.current.decodeAudioData(arrayBuffer)
+      )
       .then((audioBuffer) => {
         sfxBufferRef.current = audioBuffer;
       })
@@ -50,7 +52,7 @@ export const useSound = (
       const profile = voiceProfiles[profileId];
 
       if (profile && !buffersRef.current[cacheKey]) {
-        const path = `/voice/${language}/${profileId}.ogg`;
+        const path = `voice/${language}/${profileId}.ogg`;
 
         fetch(path)
           .then((response) => response.arrayBuffer())
@@ -102,33 +104,35 @@ export const useSound = (
       const profileId = config.profile || "f1";
       const language = config.voiceLanguage || "korean";
       const cacheKey = `animalese/${language}/${profileId}`;
-      
+
       const profile = voiceProfiles[profileId];
       // Note: we don't strictly need profile loaded to play SFX, but we do for voice.
-      
+
       const normalizedChar = char.toLowerCase();
       let spriteKey = keyMapping[normalizedChar] || keyMapping[char] || "o";
 
       // Fallback for unknown characters
       if (!keyMapping[normalizedChar] && !keyMapping[char]) {
-          // If it looks like a symbol/number not in map, maybe random letter?
-          // Existing logic:
-          const keys = "abcdefghijklmnopqrstuvwxyz";
-          const code = char.charCodeAt(0) || 0;
-          spriteKey = keys[code % keys.length];
+        // If it looks like a symbol/number not in map, maybe random letter?
+        // Existing logic:
+        const keys = "abcdefghijklmnopqrstuvwxyz";
+        const code = char.charCodeAt(0) || 0;
+        spriteKey = keys[code % keys.length];
       }
 
       // Check if it's Voice or SFX
       let isSfx = false;
       let spriteData = voice_sprite[spriteKey];
-      
+
       if (!spriteData) {
         spriteData = sfx_sprite[spriteKey];
         isSfx = true;
       }
-      
+
       // Select buffer
-      const buffer = isSfx ? sfxBufferRef.current : buffersRef.current[cacheKey];
+      const buffer = isSfx
+        ? sfxBufferRef.current
+        : buffersRef.current[cacheKey];
 
       if (buffer && spriteData) {
         let startTime = spriteData[0] / 1000;
@@ -140,19 +144,19 @@ export const useSound = (
         // Pitch shift logic
         let rate = 1.0;
         if (isSfx) {
-             // For SFX, we might want consistent pitch, or very slight variation.
-             // Applying voice profile pitch to SFX usually sounds wrong (e.g. low pitch click).
-             // However, slight variation makes it organic.
-             const variation = (Math.random() * 0.1 - 0.05);
-             rate = 1.0 + variation;
+          // For SFX, we might want consistent pitch, or very slight variation.
+          // Applying voice profile pitch to SFX usually sounds wrong (e.g. low pitch click).
+          // However, slight variation makes it organic.
+          const variation = Math.random() * 0.1 - 0.05;
+          rate = 1.0 + variation;
         } else {
-             // Voice
-             if (profile) {
-                const basePitch = profile.pitch;
-                const variation = (Math.random() * 2 - 1) * profile.variation;
-                const totalPitchShift = basePitch + variation;
-                rate = Math.pow(2, totalPitchShift / 12.0);
-             }
+          // Voice
+          if (profile) {
+            const basePitch = profile.pitch;
+            const variation = (Math.random() * 2 - 1) * profile.variation;
+            const totalPitchShift = basePitch + variation;
+            rate = Math.pow(2, totalPitchShift / 12.0);
+          }
         }
 
         source.playbackRate.value = Math.max(0.1, rate);
